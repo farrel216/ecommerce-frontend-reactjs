@@ -4,6 +4,7 @@ import {Routes, Route} from 'react-router-dom';
 import Login from './pages/Login';
 import Navigation from './component/Navigation';
 import ProductDetail from './component/ProductDetail';
+import Register from './pages/Register';
 function App() {
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
@@ -20,7 +21,7 @@ function App() {
       <Routes>
         <Route path='/' element={<LandingPage/>}/>
         <Route path='/home' element={<LandingPage/>}/> 
-        <Route path='/product/*' element={<ProductDetail/>}/>
+        <Route path='/product/:productId' element={<ProductDetail/>}/>
         <Route path='*' element={<LandingPage/>}/>        
       </Routes>
           </section>
@@ -28,6 +29,7 @@ function App() {
         : 
         <Routes>
         <Route path='/' element={<Login isLogin={isLogin} setIsLogin={setIsLogin}/>}/>
+        <Route path='/register' element={<Register isLogin={isLogin} setIsLogin={setIsLogin}/>}/>
         <Route path='*' element={<Login isLogin={isLogin} setIsLogin={setIsLogin}/>}/> 
       </Routes>
       }

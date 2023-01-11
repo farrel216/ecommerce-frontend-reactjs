@@ -1,6 +1,6 @@
 import { Label, TextInput, Checkbox, Button, Card } from "flowbite-react"
 import { Helmet } from "react-helmet"
-const Login = ({isLogin,setIsLogin}) => {
+const Register = ({isLogin,setIsLogin}) => {
 
     const onSubmitHandler = () =>{
         setIsLogin(true)
@@ -10,7 +10,7 @@ const Login = ({isLogin,setIsLogin}) => {
     return(
         <>
         <Helmet>
-            <title>Login Page</title>
+            <title>Register Page</title>
         </Helmet>
         <div className="h-screen flex items-center">
 
@@ -18,7 +18,7 @@ const Login = ({isLogin,setIsLogin}) => {
         <Card className="container max-w-full md:max-w-screen-md mx-auto px-4">
         <div className="justify-center grid">
             <img src="https://flowbite.com/docs/images/logo.svg" alt="logo" className="w-32 h-32"/>
-            <h1 className="text-center mt-5 font-bold text-3xl">LOGIN</h1>
+            <h1 className="text-center mt-5 font-bold text-3xl">Register</h1>
         </div>
         <div className="container mx-auto max-w-xl items-center">
             <form className="flex flex-col gap-4" onSubmit={onSubmitHandler}>
@@ -47,6 +47,18 @@ const Login = ({isLogin,setIsLogin}) => {
       type="password"
     />
   </div>
+  <div>
+    <div className="mb-2 block">
+      <Label
+        htmlFor="confpassword"
+        value="Your password"
+      />
+    </div>
+    <TextInput
+      id="confpassword"
+      type="password"
+    />
+  </div>
   <div className="flex items-center">
     <Label htmlFor="agree">
       Dont Have account?{' '}
@@ -72,4 +84,4 @@ const Login = ({isLogin,setIsLogin}) => {
 
 }
 
-export default Login
+export default Register

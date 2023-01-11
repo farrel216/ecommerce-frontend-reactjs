@@ -6,7 +6,7 @@ const Navigation = () => {
             fluid={true}
             rounded={true}
         >
-            <Navbar.Brand href="#">
+            <Navbar.Brand href="/home">
                 <img
                     src="https://flowbite.com/docs/images/logo.svg"
                     className="mr-3 h-6 sm:h-9"

@@ -1,14 +1,14 @@
 import { Card } from "flowbite-react"
-
-const CardProduct = ({name, price, id}) => {
-
+import profile from "../assets/placeholder/default-image.jpg"
+const CardProduct = ({name, price, id, image}) => {
+    
     return (
         <div className="max-w-sm">
         <Card
-          imgAlt="Apple Watch Series 7 in colors pink, silver, and black"
-          imgSrc="https://cdn.eraspace.com/pub/media/catalog/product/a/p/apple_watch_se_gen_2_44mm_gps_silver_aluminium_case_with_white_sport_band_1_1.jpg"
+          imgAlt={name}
+          imgSrc={image ? process.env.REACT_APP_IMAGE_URL+'/product/'+image : profile}
         >
-          <a href="#">
+          <a href={`/product/${id}`}>
             <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
               {name}
             </h5>
