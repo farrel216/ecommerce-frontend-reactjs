@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useEffect, useState } from 'react';
+import LandingPage from './pages/LandingPage';
+import {Routes, Route} from 'react-router-dom';
+import Login from './pages/Login';
+import Navigation from './component/Navigation';
+import ProductDetail from './component/ProductDetail';
 function App() {
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    
+  },[isLogin])
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+        {isLogin ? 
+        <div className='h-screen'>
+          <Navigation/>
+          <section>
+
+      <Routes>
+        <Route path='/' element={<LandingPage/>}/>
+        <Route path='/home' element={<LandingPage/>}/> 
+        <Route path='/product/*' element={<ProductDetail/>}/>
+        <Route path='*' element={<LandingPage/>}/>        
+      </Routes>
+          </section>
+        </div>
+        : 
+        <Routes>
+        <Route path='/' element={<Login isLogin={isLogin} setIsLogin={setIsLogin}/>}/>
+        <Route path='*' element={<Login isLogin={isLogin} setIsLogin={setIsLogin}/>}/> 
+      </Routes>
+      }
+
+    </>
   );
 }
 
