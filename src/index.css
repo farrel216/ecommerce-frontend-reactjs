@@ -15,3 +15,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.alert-error{
+  color: #bf1650;
+}
+.alert-error::before {
+  display: inline;
+  content: "⚠ ";
+}
