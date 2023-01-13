@@ -15,10 +15,9 @@ const Login = () => {
     }).then(async (response) => {
       if(response){
         await auth.getToken()
-        navigate('/home')
       }
+      navigate('/home')
     }).catch((error) => {
-      console.log(error.response)
       if (error.response.status === 404) {
         return setError('email', { type: 'notfound', message: error.response.data.message })
       }

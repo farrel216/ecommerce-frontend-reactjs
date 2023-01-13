@@ -10,7 +10,7 @@ const Register = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, data)
       if(response){
-        navigate('/')
+        navigate('/login')
       }
     } catch (error) {
       return setError('email', {type:'duplicate', message: error.response.data.message})
