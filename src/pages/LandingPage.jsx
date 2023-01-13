@@ -47,7 +47,7 @@ const LandingPage = () => {
                         </div>
                         <div className="bg-gray-300 mt-5 p-5 max-w-full mx-auto">
                             <h3 className="text-center text-xl font-bold font-mono  leading-none mb-5">Produk Pilihan</h3>
-                            <div className="container mx-auto flex flex-wrap justify-start gap-6">
+                            <div className="container mx-auto flex flex-wrap justify-center gap-6">
                                 {products.map((product) => {
                                     return (
                                         <CardProduct key={product.id} name={product.title} price={product.price} id={product.id} rate={product.rating.rate} image={product.image} category={product.category} />

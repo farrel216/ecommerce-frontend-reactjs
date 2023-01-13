@@ -2,7 +2,6 @@ import { useState, createContext, useContext } from "react";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 
-
 const AuthContext = createContext();
 
 function AuthProvider({children}){
@@ -16,14 +15,15 @@ const useAuthProvider = () => {
     const [token, setToken] = useState(null);
     const [expire, setExpire] = useState();
     const [isLogin, setIsLogin] = useState(false);
+    const [id,setId] = useState(null)
 
     const getToken = async () => {
         try {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}/token`,{withCredentials:true})
-          console.log(response)
           setToken(response.data.accessToken)
           const decoded = jwtDecode(response.data.accessToken)
           setExpire(decoded.exp)
+          setId(decoded.id)
           setIsLogin(true)
           return response.data.accessToken
         } catch (error) {
@@ -40,7 +40,7 @@ const useAuthProvider = () => {
         }
       }
 
-    return { isLogin, token, expire, getToken, logout };
+    return { isLogin, token, expire, id, getToken, logout};
 }
 
 export { AuthProvider, useAuth };

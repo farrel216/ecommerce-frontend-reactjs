@@ -10,6 +10,7 @@ import { Spinner } from 'flowbite-react';
 import NotFoundPage from './pages/NotFoundPage';
 import CategoryPage from './pages/CategoryPage'
 import CartPage from './pages/CartPage';
+
 function App() {
   const [loading, setLoading] = useState(true)
   const auth = useAuth()

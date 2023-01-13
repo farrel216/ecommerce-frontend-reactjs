@@ -1,24 +1,50 @@
-import { Navbar, Dropdown, Avatar, Button } from "flowbite-react"
+import { Navbar, Dropdown, Avatar} from "flowbite-react"
 import { useAuth } from '../context/AuthContext'
 import profile from '../assets/placeholder/profile-photo.jpeg'
 import { useNavigate } from "react-router"
+import { useEffect, useState } from "react"
+import {FaShoppingCart} from 'react-icons/fa'
+import AxiosConfig from "../config/AxiosConfig";
+import { useCart } from "react-use-cart"
+
 
 const Navigation = ({ isLogin }) => {
     const auth = useAuth()
     const navigate = useNavigate()
     const pathname = window.location.pathname
-
+    const [name,setName] = useState("")
+    const [email,setEmail] = useState("")
+    const {totalItems} = useCart()
+    
     const logoutHandler = async () => {
         try {
             await auth.logout()
             navigate('/login')
-
+            
         } catch (error) {
             console.log(error)
         }
     }
-
-
+    
+    useEffect(() => {
+        const axiosJWT = AxiosConfig()
+        const getUserData = async () => {
+            try {
+                const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/users/${auth.id}`,{withCredentials:true})
+                return response.data.data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        const getUser = async () => {
+            await auth.getToken()
+            const response = await getUserData()
+            setEmail(response.email)
+            setName(response.name)
+        }
+      getUser()
+    }, [auth])
+    
 
     return (
         <Navbar
@@ -37,17 +63,30 @@ const Navigation = ({ isLogin }) => {
             </Navbar.Brand>
             <div className="flex md:order-2">
                 {isLogin ? (
+                    <>
+                    <div className="mr-4 inline">
+                        <a href="/cart">
+                        <div>
+
+                        <FaShoppingCart/>
+                        </div>
+                        <div>
+                        <span>{totalItems}</span>
+
+                        </div>
+                        </a>
+                    </div>
                     <Dropdown
                         arrowIcon={false}
                         inline={true}
                         label={<Avatar alt="User settings" img={profile} rounded={true} />}
-                    >
+                        >
                         <Dropdown.Header>
                             <span className="block text-sm">
-                                Bonnie Green
+                               {name}
                             </span>
                             <span className="block truncate text-sm font-medium">
-                                name@flowbite.com
+                                {email}
                             </span>
                         </Dropdown.Header>
                         <Dropdown.Item>
@@ -61,12 +100,13 @@ const Navigation = ({ isLogin }) => {
                             <button onClick={() => { logoutHandler() }}>Sign Out</button>
                         </Dropdown.Item>
                     </Dropdown>
+                </>
                 ) : (<div className="hidden md:flex ">
                     <div className="grid grid-cols-2 gap-2">
                         <a href="/login" className="btn text-green-700 border border-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">Login</a>
-                        <Button onClick={navigate('/register')} color="success">
+                        <a href="/register" className="btn focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                             Register
-                        </Button>
+                        </a>
                     </div></div>
                 )}
             </div>
@@ -74,7 +114,7 @@ const Navigation = ({ isLogin }) => {
             <Navbar.Collapse>
                 <Navbar.Link active={pathname === "/home"}
                     href="/home"
-                >
+                    >
                     Home
                 </Navbar.Link>
                 <Navbar.Link
