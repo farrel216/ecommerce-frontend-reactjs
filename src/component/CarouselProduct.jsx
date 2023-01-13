@@ -19,7 +19,6 @@ const CarouselProduct = (products) => {
     axios.get(`https://fakestoreapi.com/products?limit=5`).then((response) => {
       setCaraousel(response.data)
       setLoading(false)
-      console.log(response.data)
     })
   }, [products])
 

@@ -10,7 +10,6 @@ const Login = () => {
   const { register, formState: { errors }, handleSubmit, setError } = useForm()
 
   const onSubmit = async (data) => {
-    console.log(data)
     axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data,{
       withCredentials: true
     }).then(async (response) => {

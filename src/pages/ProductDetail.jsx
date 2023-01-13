@@ -26,7 +26,6 @@ const ProductDetail = () => {
       setLoading(true)
       axios.get(`https://fakestoreapi.com/products/${productId}`).then((response) => {
         setDetail(response.data)
-        console.log(response.data)
         setLoading(false)
       }).catch((err) => {
         console.log(err)

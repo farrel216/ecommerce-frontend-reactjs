@@ -2,6 +2,7 @@ import { Navbar, Dropdown, Avatar} from "flowbite-react"
 import { useAuth } from '../context/AuthContext'
 import profile from '../assets/placeholder/profile-photo.jpeg'
 import { useNavigate } from "react-router"
+import axios from "axios"
 import { useEffect, useState } from "react"
 import {FaShoppingCart} from 'react-icons/fa'
 import AxiosConfig from "../config/AxiosConfig";
@@ -13,9 +14,11 @@ const Navigation = ({ isLogin }) => {
     const navigate = useNavigate()
     const pathname = window.location.pathname
     const [name,setName] = useState("")
+    const [category,setCategory] = useState([])
     const [email,setEmail] = useState("")
     const {totalItems} = useCart()
     
+    const axiosJWT = AxiosConfig()
     const logoutHandler = async () => {
         try {
             await auth.logout()
@@ -25,25 +28,37 @@ const Navigation = ({ isLogin }) => {
             console.log(error)
         }
     }
+    const getUserData = async () => {
+        try {
+            const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/users/${auth.id}`,{withCredentials:true})
+            return response.data.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const getCategory = async () => {
+        try {
+            const response = await axios.get('https://fakestoreapi.com/products/categories')
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
     
     useEffect(() => {
-        const axiosJWT = AxiosConfig()
-        const getUserData = async () => {
-            try {
-                const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/users/${auth.id}`,{withCredentials:true})
-                return response.data.data
-            } catch (error) {
-                console.log(error)
-            }
-        }
+        if(auth.isLogin){
         const getUser = async () => {
             await auth.getToken()
+            const category = await getCategory()
             const response = await getUserData()
+            setCategory(category)
             setEmail(response.email)
             setName(response.name)
         }
-      getUser()
-    }, [auth])
+        getUser()
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [auth.isLogin])
     
 
     return (
@@ -117,16 +132,17 @@ const Navigation = ({ isLogin }) => {
                     >
                     Home
                 </Navbar.Link>
-                <Navbar.Link
-                    active={pathname === "/category/jewelery"}
-                    href="/category/jewelery">
-                    Jewelery
-                </Navbar.Link>
-                <Navbar.Link
-                    active={pathname === "/category/electronics"}
-                    href="/category/electronics">
-                    Electronics
-                </Navbar.Link>
+                <Dropdown arrowIcon={true}
+                        inline={true}
+                        label={"Category"}>
+                            {category.map((item,index) => {
+                                return (
+                                    <Dropdown.Item key={index}>
+                                        <a href={`/category/${item}`}>{item}</a>
+                                    </Dropdown.Item>
+                                )
+                            })}
+                </Dropdown>
                 <Navbar.Link className={isLogin ? ('hidden') : ("md:hidden")} href="/login">
                     Login
                 </Navbar.Link>
