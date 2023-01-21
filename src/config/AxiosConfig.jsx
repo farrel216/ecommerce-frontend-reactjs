@@ -14,7 +14,8 @@ const AxiosConfig = () => {
     axiosJWT.interceptors.request.use(async (config) => {
         let currentDate = new Date()
         if (!auth?.token || auth?.expire * 1000 < currentDate.getTime()) {
-            const newToken = await auth.getToken()
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/token`,{withCredentials:true})
+            const newToken = response.data.accessToken
             config.headers["x-access-token"] = newToken
         }
         else{

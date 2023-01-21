@@ -3,15 +3,16 @@ import { Label, TextInput, Button, Card } from "flowbite-react"
 import { Helmet } from "react-helmet"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router"
+import { useAuth } from "../context/AuthContext"
 const Login = () => {
+  const auth = useAuth()
   const navigate = useNavigate()
   const { register, formState: { errors }, handleSubmit, setError } = useForm()
 
+
   const onSubmit = async (data) => {
-    axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data,{
+    const response =  await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data,{
       withCredentials: true
-    }).then(async (response) => {
-      navigate('/home')
     }).catch((error) => {
       if (error.response.status === 404) {
         return setError('email', { type: 'notfound', message: error.response.data.message })
@@ -20,6 +21,9 @@ const Login = () => {
         return setError('password', { type: 'wrongpassword', message: error.response.data.message })
       }
     })
+    if(response){
+      navigate('/home')
+    }
   }
 
   
