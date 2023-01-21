@@ -1,11 +1,36 @@
-import { useCart } from "react-use-cart";
+import { useEffect} from "react";
+import AxiosConfig from "../config/AxiosConfig";
+import { useCart } from '../context/CartContext';
 
 const CartPage = () => {
-  const { isEmpty, items, updateItemQuantity } = useCart();
-  const totalPrice = items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const axiosJWT = AxiosConfig()
+  const cart = useCart()
+  
+  const emptyCartHandler = async () => {
+    await cart.emptyCart()
+    await cart.getCart()
+  }
+
+  const checkOutHandler = async () => {
+    try{
+      const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/order`)
+      if(response){
+        await emptyCartHandler()
+      }
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    
+    
+    return () => {
+    }
+  }, [])
+  
+  
 
   return (
     <>
@@ -17,7 +42,7 @@ const CartPage = () => {
                 <div className="md:grid md:grid-cols-3 gap-2 ">
                   <div className="col-span-2 p-5">
                     <h1 className="text-xl font-medium ">Shopping Cart</h1>
-                    {isEmpty ? (
+                    {cart.isEmpty ? (
                       <div className="flex justify-center items-center mt-6 pt-6 border-t">
                         {" "}
                         <span className="text-md  font-medium text-black">
@@ -25,31 +50,29 @@ const CartPage = () => {
                         </span>
                       </div>
                     ) : null}
-                    {items.map((item) => {
+                    {cart.items.map((item) => {
                       return (
                         <div
-                          key={item.id}
-                          className="flex justify-between items-center mt-6 pt-6"
+                          key={item._id}
+                          className="grid grid-cols-2 mt-6 pt-6"
                         >
                           <div className="flex  items-center">
                             <img
-                              src={item.image}
-                              alt={item.title}
+                              src={item.product.image}
+                              alt={item.product.title}
                               width={60}
                               className="rounded-full "
                             />
                             <div className="flex flex-col ml-3">
                               <span className="md:text-md font-medium">
-                                {item.title}
+                                {item.product.title}
                               </span>
                             </div>
                           </div>
                           <div className="flex justify-center items-center">
                             <div className="pr-8 flex ">
                               <button
-                                onClick={() =>
-                                  updateItemQuantity(item.id, item.quantity - 1)
-                                }
+                                onClick={() => {console.log(item.product)}}
                                 className="font-semibold"
                               >
                                 -
@@ -61,9 +84,6 @@ const CartPage = () => {
                                 readOnly
                               />
                               <button
-                                onClick={() =>
-                                  updateItemQuantity(item.id, item.quantity + 1)
-                                }
                                 className="font-semibold"
                               >
                                 +
@@ -71,7 +91,7 @@ const CartPage = () => {
                             </div>
                             <div className="pr-8 ">
                               <span className="text-xs font-medium">
-                                ${item.price * item.quantity}
+                                ${item.totalProductPrice}
                               </span>
                             </div>
                             <div>
@@ -82,20 +102,25 @@ const CartPage = () => {
                       );
                     })}
 
-                    <div className="flex justify-between items-center mt-6 pt-6 border-t">
+                    <div className="grid grid-cols-3 mt-6 pt-6 border-t">
                       <a href="/home" className="flex items-center">
                         <i className="fa fa-arrow-left text-sm pr-2" />
                         <span className="text-md  font-medium text-blue-500">
                           Continue Shopping
                         </span>
                       </a>
+                      <button className="button" onClick={()=>{emptyCartHandler()}}>
+                        <span className="text-md  font-medium text-blue-500">
+                          Clear Cart
+                        </span>
+                      </button>
                       <div className="flex justify-center items-end">
                         <span className="text-sm font-medium text-gray-400 mr-1">
                           Subtotal:
                         </span>
                         <span className="text-lg font-bold text-gray-800 ">
                           {" "}
-                          ${totalPrice}
+                          ${cart.totalPrice}
                         </span>
                       </div>
                     </div>
@@ -190,7 +215,7 @@ const CartPage = () => {
                         />
                       </div>
                     </div>
-                    <button className="h-12 w-full bg-blue-500 rounded focus:outline-none text-white hover:bg-blue-600">
+                    <button onClick={()=>{checkOutHandler()}} className="h-12 w-full bg-blue-500 rounded focus:outline-none text-white hover:bg-blue-600">
                       Check Out
                     </button>
                   </div>
