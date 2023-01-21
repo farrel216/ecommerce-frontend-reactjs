@@ -10,15 +10,18 @@ import { Spinner } from 'flowbite-react';
 import NotFoundPage from './pages/NotFoundPage';
 import CategoryPage from './pages/CategoryPage'
 import CartPage from './pages/CartPage';
+import ProfilePage from './pages/ProfilePage';
+import { useCart } from './context/CartContext';
 
 function App() {
   const [loading, setLoading] = useState(true)
   const auth = useAuth()
+  const cart = useCart()
   const pathname = window.location.pathname
   const navigate = useNavigate()
   useEffect(() => {
+    setLoading(true)
     const verify = async () => {
-      setLoading(true)
       if (!auth.token) {
         const response = await auth.getToken()
         if (!response) {
@@ -26,11 +29,15 @@ function App() {
             navigate('/login')
           }
         }
+        else{
+          await auth.getUserData()
+          await cart.getCart()
+        }
       }
-      setLoading(false)
     }
     verify()
-  }, [auth, pathname, navigate])
+    setLoading(false)
+  }, [auth, pathname, navigate, cart])
 
   return (
     <>
@@ -60,6 +67,7 @@ function App() {
             <Routes>
               <Route exact path='/' element={<LandingPage />} />
               <Route path='/home' element={<LandingPage />} />
+              <Route path='/profile' element={<ProfilePage />} />
               <Route path='/product/:productId' element={<ProductDetail />} />
               <Route path='/category/:category' element={<CategoryPage />} />
               <Route path='/cart' element={<CartPage/>}/>
