@@ -8,23 +8,23 @@ const LandingPage = () => {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
 
-    // const getProduct = async () => {
-    //     const response = await axios.get(`${process.env.REACT_APP_API_URL}/product`)
-    //     setProducts(response.data.data)
-    // }
-    // useEffect(() => {
-    //     getProduct()
-    // }, [])
     const getProduct = async () => {
         setLoading(true)
-        const response = await axios.get(`https://fakestoreapi.com/products`)
-        setProducts(response.data)
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/product`)
+        setProducts(response.data.data)
+        console.log(response)
         setLoading(false)
     }
+    // const getProduct = async () => {
+        //     setLoading(true)
+        //     const response = await axios.get(`https://fakestoreapi.com/products`)
+        //     setProducts(response.data)
+        //     setLoading(false)
+        // }
     useEffect(() => {
         getProduct()
     }, [])
-
+        
 
     return (
         <>
@@ -50,7 +50,7 @@ const LandingPage = () => {
                             <div className="container mx-auto flex flex-wrap justify-center gap-6">
                                 {products.map((product) => {
                                     return (
-                                        <CardProduct key={product.id} name={product.title} price={product.price} id={product.id} rate={product.rating.rate} image={product.image} category={product.category} />
+                                        <CardProduct key={product._id} name={product.title} price={product.price} id={product._id} rate={product.rating[0].rate} image={product.image} category={product.category.name} />
                                     )
                                 })}
                             </div>
